@@ -1,6 +1,8 @@
 package com.deploy.praktikum6.controller;
 
 import com.deploy.praktikum6.model.User;
+import com.deploy.praktikum6.repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,7 +12,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class UserController {
-    private User userTemp;
+
+    @Autowired
+    private UserRepository userRepository;
 
     @GetMapping("/")
     public String loginPage() {
@@ -28,7 +32,7 @@ public class UserController {
 
     @GetMapping("/home")
     public String home(Model model) {
-        model.addAttribute("user", userTemp);
+        model.addAttribute("data", userRepository.findAll());
         return "home";
     }
 
@@ -40,7 +44,7 @@ public class UserController {
 
     @PostMapping("/save")
     public String save(@ModelAttribute User user) {
-        userTemp = user;
+        userRepository.save(user);
         return "redirect:/home";
     }
 
